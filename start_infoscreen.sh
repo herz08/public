@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Virtuelle Umgebung aktivieren
 source infoscreen/bin/activate
