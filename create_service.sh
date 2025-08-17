@@ -4,7 +4,7 @@ SERVICE_PATH="/etc/systemd/system/startscreen.service"
 
 cat <<EOF | sudo tee "$SERVICE_PATH" > /dev/null
 [Unit]
-Description=Mein Startscript
+Description=Startscript fuer Startscreen
 After=network.target
 
 [Service]
