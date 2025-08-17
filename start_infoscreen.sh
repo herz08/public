@@ -14,19 +14,16 @@ max_attempts=3
 attempt=1
 while (( attempt <= max_attempts ))
 do
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starte infoscreen.py im Hintergrund (Versuch $attempt von $max_attempts)..." | tee -a $LOGFILE
-    python3 infoscreen.py >> $LOGFILE 2>&1 &
-    PY_PID=$!
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starte infoscreen.py (Versuch $attempt von $max_attempts)..." | tee -a $LOGFILE
+    python3 infoscreen.py 2>&1 | tee -a $LOGFILE
+    exit_code=$?
 
-    # Kurze Wartezeit, um zu prüfen, ob der Prozess sofort wieder beendet wurde (Fehler)
-    sleep 2
-
-    # Prüfen, ob der Prozess noch läuft
-    if ps -p $PY_PID > /dev/null; then
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Erfolg: infoscreen.py läuft im Hintergrund (PID $PY_PID)." | tee -a $LOGFILE
+    # Prüfen, ob das Programm erfolgreich beendet wurde (Exit-Code 0)
+    if [ $exit_code -eq 0 ]; then
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] infoscreen.py wurde erfolgreich beendet." | tee -a $LOGFILE
         break
     else
-        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Fehler: infoscreen.py konnte nicht gestartet werden. Warte 2 Sekunden und starte erneut..." | tee -a $LOGFILE
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Fehler: infoscreen.py beendet mit Exit-Code $exit_code. Warte 2 Sekunden und starte erneut..." | tee -a $LOGFILE
         sleep 2
         ((attempt++))
     fi
